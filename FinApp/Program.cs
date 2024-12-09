@@ -1,15 +1,30 @@
-using Dapper;
-using FinApp.Data.CustomMapping;
-using FinApp.Models;
+using FinApp.Data;
+using FinApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register custom type handlers before building the application
-SqlMapper.AddTypeHandler(typeof(UserRole), new EnumTypeHandler<UserRole>()); //to map the enum to string and vice versa
-SqlMapper.AddTypeHandler(typeof(LicenseKeyType), new EnumTypeHandler<LicenseKeyType>()); //to map the enum to string and vice versa
+//for checking only
+var tokenSecret = builder.Configuration["JwtSettings:TokenSecret"];
+Console.WriteLine($"Token Secret: {tokenSecret}");
+
+var connstr = builder.Configuration["ConnectionStrings:DefaultConnection"];
+Console.WriteLine($"Token Secret: {connstr}");
 
 // Add services to the container
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<DbContext>(provider =>
+{
+    var connectionString = builder.Configuration["ConnectionStrings:DefaultConnection"] ?? throw new Exception("connection string not found");
+    return new DbContext(connectionString); // Your DbContext constructor expects a connection string
+});
+
+builder.Services.AddScoped<JwtService>(provider =>
+{
+    var jwtSettings = new JwtSetting { TokenSecret = builder.Configuration["JwtSettings:TokenSecret"] ?? throw new Exception("tokensecret can't be empty") };
+
+    return new JwtService(jwtSettings);
+});
 
 var app = builder.Build();
 
@@ -28,7 +43,6 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-app.MapControllerRoute(name: "default", pattern: "{controller=Auth}/{action=Login}/{id?}")
-    .WithStaticAssets();
+app.MapControllerRoute(name: "default", pattern: "{controller=Auth}/{action=Login}/{id?}").WithStaticAssets();
 
 app.Run();

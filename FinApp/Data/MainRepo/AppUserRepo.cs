@@ -1,4 +1,7 @@
-﻿using FinApp.Models;
+﻿using Dapper;
+using FinApp.Core;
+using FinApp.Models;
+using Microsoft.Data.SqlClient;
 
 namespace FinApp.Data.MainRepo
 {
@@ -7,7 +10,7 @@ namespace FinApp.Data.MainRepo
         ///<summary>
         /// get one user by email and password
         ///</summary>
-        AppUser GetOne(string email, string password);
+        AppUser GetOne(string email);
 
         ///<summary>
         /// get many users only for admin
@@ -29,22 +32,57 @@ namespace FinApp.Data.MainRepo
             _ConnectionString = connstr;
         }
 
-        public AppUser GetOne(string email, string password)
+        public AppUser GetOne(string email)
         {
-            //fetch one user by id and password
-            //if not exists then throw exception
-            //return the user
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_ConnectionString);
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Email", email);
+
+            var sql =
+                @"
+                    SELECT  
+                        Top 1
+                        Id,
+                        Email,
+                        FullName,
+                        Pwd,
+                        [Role],
+                        [Status],
+                        CreatedBy,
+                        CreatedAt,
+                        UpdatedBy,
+                        UpdatedAt
+                    FROM AppUser
+                    WHERE Email=@Email";
+
+            var user = connection.QueryFirstOrDefault<AppUser>(sql, parameters);
+
+            return user;
         }
 
-        public AppUser InsertOne(string email, string password, string fullname)
+        public AppUser InsertOne(string email, string hashedpwd, string fullname)
         {
-            //check does email exists
-            //if exists then throw exception
-            //set userrole to be USER
-            //use bcrpyt for hashing here
-            //then insert
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(_ConnectionString);
+
+            var parameters = new AppUser
+            {
+                Email = email,
+                Pwd = hashedpwd,
+                FullName = fullname,
+                Role = "USER",
+                Status = "VERIFIED",
+                CreatedBy = "SYSTEM",
+            };
+
+            var sql =
+                @"
+                    INSERT INTO AppUser(Email, FullName, Pwd, [Role], [Status], CreatedBy)
+                    VALUES(@Email, @FullName, @Pwd, @Role, @Status, @CreatedBy)";
+
+            connection.Execute(sql, parameters);
+
+            return parameters;
         }
 
         public AppUser GetMany(string licensetype, string userrole)

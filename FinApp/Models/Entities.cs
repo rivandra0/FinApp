@@ -11,10 +11,15 @@ namespace FinApp.Models
 
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
+        public string Pwd { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
-        public UserRole Role { get; set; } = UserRole.USER;
+        public string Role { get; set; }
+        public string Status { get; set; }
         public string JwtToken { get; set; } = string.Empty;
+        public string CreatedBy { get; set; }
+        public string CreatedAt { get; set; }
+        public string UpdatedBy { get; set; }
+        public string UpdatedAt { get; set; }
 
         [AllowNull]
         public License License { get; set; }
