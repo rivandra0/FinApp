@@ -1,0 +1,6 @@
+@FinAppLicense_HostAddress = http://localhost:5197
+
+GET {{FinAppLicense_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
