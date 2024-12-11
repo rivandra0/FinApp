@@ -1,15 +1,13 @@
-﻿using System;
-
-namespace FinApp.Core
+﻿namespace FinApp.Core
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class RoleProtectAttribute : Attribute
+    public class LicenseProtectAttribute : Attribute
     {
-        public string[] Roles { get; }
+        public string[] Types { get; }
 
-        public RoleProtectAttribute(params string[] roles)
+        public LicenseProtectAttribute(params string[] licenseTypes)
         {
-            Roles = roles;
+            Types = licenseTypes;
         }
     }
 }

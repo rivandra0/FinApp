@@ -3,24 +3,42 @@
 }
 
 
-<h5>@ViewBag.Role</h5>
-
 <div class="text-center">
     <h1 class="display-4">Welcome @ViewBag.FullName (@ViewBag.UserId)</h1>
     <h5>Role: @ViewBag.Role</h5>
     <h5>LicenseType: @ViewBag.LicenseType</h5>
 
-    <ul class="flex-row navbar-nav flex-grow-1">
+    <div class="d-flex flex-column justify-content-start">
+        
+        <h5 class="text-start">Main Features</h5>
+        <ul class="flex-row navbar-nav flex-grow-1">
+            
+            <li class="nav-item p-3">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            <li class="nav-item p-3">
+                <a class="nav-link text-dark" asp-area="" asp-controller="License" asp-action="Activate">Activate License</a>
+            </li>
+            <li class="nav-item p-3">
+                <a class="nav-link text-dark" asp-area="" asp-controller="License" asp-action="Index">Licenses</a>
+            </li>
+        </ul>
 
-        <li class="nav-item p-3">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-        </li>
-        <li class="nav-item p-3">
-            <a class="nav-link text-dark" asp-area="" asp-controller="License" asp-action="Activate">Activate License</a>
-        </li>
-        <li class="nav-item p-3">
-            <a class="nav-link text-dark" asp-area="" asp-controller="License" asp-action="Index">Licenses</a>
-        </li>
-    </ul>
+        <h5 class="text-start">Features</h5>
+        <ul class="flex-row navbar-nav flex-grow-1">
+            
+
+            <li class="nav-item p-3">
+                <a class="nav-link" asp-area="" asp-controller="Feature" asp-action="FeatureBasic">Feature Basic</a>
+            </li>
+            <li class="nav-item p-3">
+                <a class="nav-link" asp-area="" asp-controller="Feature" asp-action="FeaturePremium">Feature Premium</a>
+            </li>
+            <li class="nav-item p-3">
+                <a class="nav-link" asp-area="" asp-controller="Feature" asp-action="FeatureEnterprise">Feature Enterprise</a>
+            </li>
+        </ul>
+    </div>
+    
 
 </div>

@@ -22,6 +22,7 @@ namespace FinApp.Controllers
             _jwtService = jwtService;
         }
 
+        [RoleProtect("SUPERADMIN", "ADMIN")]
         [HttpGet]
         public IActionResult Index()
         {
