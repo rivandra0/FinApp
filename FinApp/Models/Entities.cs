@@ -5,7 +5,7 @@ using System.Net;
 
 namespace FinApp.Models
 {
-    public class AppUser
+    public class AppUserModel
     {
         public int Id { get; set; }
 
@@ -22,18 +22,19 @@ namespace FinApp.Models
         public string UpdatedAt { get; set; }
 
         [AllowNull]
-        public License License { get; set; }
+        public LicenseModel License { get; set; }
     }
 
-    public class License
+    public class LicenseModel
     {
         [Required]
         public string Key { get; set; } = string.Empty;
-        public LicenseKeyType Type { get; set; } = LicenseKeyType.BASIC;
+        public string Type { get; set; } = ""; //BASIC|PREMIUM|ENTERPRISE
         public DateTime Expiry { get; set; }
         public int UserId { get; set; }
+        public string Status { get; set; } //ACTIVE|INACTIVE
 
         [AllowNull]
-        public AppUser User { get; set; }
+        public AppUserModel User { get; set; }
     }
 }

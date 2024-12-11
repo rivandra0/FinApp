@@ -16,6 +16,6 @@ namespace FinApp.Data
         public AppUserRepo AppUser => _appUserRepo.Value;
 
         private readonly Lazy<LicenseRepo> _licenseRepo;
-        public LicenseRepo Package => _licenseRepo.Value;
+        public LicenseRepo License => _licenseRepo.Value;
     }
 }

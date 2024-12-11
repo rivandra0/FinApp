@@ -1,0 +1,35 @@
+﻿@model FinApp.Controllers.LicenseController.LicenseListViewModel
+
+
+@{
+    ViewData["Title"] = "License List";
+}
+
+<a class="btn btn-outline-dark" asp-controller="Home" asp-action="Index">Back</a>
+
+<h2>@ViewData["Title"]</h2>
+
+<a class="btn btn-primary" asp-action="Create" >Create License</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Type</th>
+            <th>Expiry</th>
+            <th>User ID</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var license in Model.Licenses)
+        {
+            <tr>
+                <td>@license.Key</td>
+                <td>@license.Type</td>
+                <td>@license.Expiry.ToString("yyyy-MM-dd")</td>
+                <td>@license.UserId</td>
+                <td>@license.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>

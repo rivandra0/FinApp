@@ -10,17 +10,17 @@ namespace FinApp.Data.MainRepo
         ///<summary>
         /// get one user by email and password
         ///</summary>
-        AppUser GetOne(string email);
+        AppUserModel GetOne(string email);
 
         ///<summary>
         /// get many users only for admin
         ///</summary>
-        AppUser GetMany(string licensetype, string userrole);
+        AppUserModel GetMany(string licensetype, string userrole);
 
         ///<summary>
         /// Inserting one user
         ///</summary>
-        AppUser InsertOne(string email, string password, string fullname);
+        AppUserModel InsertOne(string email, string password, string fullname);
     }
 
     public class AppUserRepo : IAuthRepo
@@ -32,7 +32,7 @@ namespace FinApp.Data.MainRepo
             _ConnectionString = connstr;
         }
 
-        public AppUser GetOne(string email)
+        public AppUserModel GetOne(string email)
         {
             using var connection = new SqlConnection(_ConnectionString);
 
@@ -56,16 +56,16 @@ namespace FinApp.Data.MainRepo
                     FROM AppUser
                     WHERE Email=@Email";
 
-            var user = connection.QueryFirstOrDefault<AppUser>(sql, parameters);
+            var user = connection.QueryFirstOrDefault<AppUserModel>(sql, parameters);
 
             return user;
         }
 
-        public AppUser InsertOne(string email, string hashedpwd, string fullname)
+        public AppUserModel InsertOne(string email, string hashedpwd, string fullname)
         {
             using var connection = new SqlConnection(_ConnectionString);
 
-            var parameters = new AppUser
+            var parameters = new AppUserModel
             {
                 Email = email,
                 Pwd = hashedpwd,
@@ -85,7 +85,7 @@ namespace FinApp.Data.MainRepo
             return parameters;
         }
 
-        public AppUser GetMany(string licensetype, string userrole)
+        public AppUserModel GetMany(string licensetype, string userrole)
         {
             //get users by the licensetype and the role
             //return

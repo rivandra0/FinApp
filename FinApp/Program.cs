@@ -5,10 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 //for checking only
 var tokenSecret = builder.Configuration["JwtSettings:TokenSecret"];
-Console.WriteLine($"Token Secret: {tokenSecret}");
 
 var connstr = builder.Configuration["ConnectionStrings:DefaultConnection"];
-Console.WriteLine($"Token Secret: {connstr}");
 
 // Add services to the container
 builder.Services.AddControllersWithViews();
@@ -22,8 +20,12 @@ builder.Services.AddScoped<DbContext>(provider =>
 builder.Services.AddScoped<JwtService>(provider =>
 {
     var jwtSettings = new JwtSetting { TokenSecret = builder.Configuration["JwtSettings:TokenSecret"] ?? throw new Exception("tokensecret can't be empty") };
-
     return new JwtService(jwtSettings);
+});
+
+builder.Services.AddControllers(config =>
+{
+    config.Filters.Add(new JwtAuthenticationFilter("jwttoken", tokenSecret));
 });
 
 var app = builder.Build();

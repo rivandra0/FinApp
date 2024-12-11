@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using FinApp.Models;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -8,7 +9,7 @@ namespace FinApp.Services
 {
     public interface IJwtService
     {
-        string GeneratePageAccessToken(AppUser user);
+        string GeneratePageAccessToken(AppUserModel user);
     }
 
     public class JwtSetting
@@ -26,7 +27,7 @@ namespace FinApp.Services
             _jwtSetting = jwtSetting;
         }
 
-        public string GeneratePageAccessToken(AppUser user)
+        public string GeneratePageAccessToken(AppUserModel user)
         {
             var expiration = DateTime.UtcNow.AddHours(72);
 
@@ -36,8 +37,9 @@ namespace FinApp.Services
                 { "Id", user.Id },
                 { "Role", user.Role },
                 { "Email", user.Email },
-                //{ "LicenseType", user.License.Type },
-                //{ "LicenseExpiry", user.License.Expiry },
+                { "FullName", user.FullName },
+                { "LicenseType", user.License.Type },
+                { "LicenseExpiry", user.License.Expiry },
                 { "exp", new DateTimeOffset(expiration).ToUnixTimeSeconds() }, // Expiration in Unix time
             };
 
@@ -56,6 +58,42 @@ namespace FinApp.Services
             );
 
             return tokenDescriptor;
+        }
+
+        public string GetTokenPayload(HttpRequest request, string claimName)
+        {
+            try
+            {
+                // Extract the token from the 'jwttoken' cookie
+                if (!request.Cookies.TryGetValue("jwttoken", out var token) || string.IsNullOrEmpty(token))
+                {
+                    throw new ArgumentException("JWT token is missing in the cookie.");
+                }
+
+                // Decode the token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                if (tokenHandler.CanReadToken(token))
+                {
+                    var jwtToken = tokenHandler.ReadJwtToken(token);
+
+                    // Find the claim with the specified name
+                    var claim = jwtToken.Claims.FirstOrDefault(c => c.Type == claimName);
+                    if (claim != null)
+                    {
+                        return claim.Value;
+                    }
+
+                    throw new ArgumentException($"Claim '{claimName}' not found in the token.");
+                }
+
+                throw new ArgumentException("Invalid token format.");
+            }
+            catch (Exception ex)
+            {
+                // Log exception if needed
+                Console.WriteLine($"Error extracting token claim: {ex.Message}");
+                return null; // Return null or throw based on your application's needs
+            }
         }
     }
 }

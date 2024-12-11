@@ -1,0 +1,26 @@
+﻿@model FinApp.Controllers.LicenseController.LicenseCreateViewModel
+
+@{
+    ViewData["Title"] = "Create License";
+}
+
+
+<a class="btn btn-outline-dark" asp-controller="License" asp-action="Index">Back</a>
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Type" class="control-label"></label>
+        <select asp-for="Type" class="form-control">
+            <option value="BASIC">BASIC</option>
+            <option value="PREMIUM">PREMIUM</option>
+            <option value="ENTERPRISE">ENTERPRISE</option>
+        </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Create License</button>
+</form>
+
